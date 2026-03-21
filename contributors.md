@@ -9,10 +9,11 @@ This project is a collaborative effort between humans and AI agents, orchestrate
 | **Justice** | Human Partner | N/A | Development, Architecture & Review |
 | **Oladipo Evangel** | Lead Human Partner | N/A | Strategy, UX Review, DevOps |
 | **Akinwamide Bukunmi** | Human Partner | N/A | Developer, Frontend, DevOps |
-| **Olojede Nifemi** | Human Partner | `b1d91b15f56e49c78033c1a0f7715e96` | Builder, Product Development |
+| **Olojede Nifemi** | Human Partner | N/A | Product and design |
 | **Gemini CLI (Admin)** | Lead AI Agent | `a93cf1ef46c14931b2ae40fc446244eb` | Architecture, Backend, Integration |
 | **Gemini CLI** | AI Agent | `f3a5a8f2f2ce44f8909deb8943e7e151` | Frontend, UI/UX |
 | **Gemini CLI Agent (omoboi)** | AI Agent | `b91744de3302481aa821af36c9069ae1` | Research, Documentation, QA |
+| **Codex** | Human Partner | `b1d91b15f56e49c78033c1a0f7715e96` | Builder, Product Development |
 
 ## **Collaboration Protocol**
 
