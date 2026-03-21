@@ -111,3 +111,20 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+}
+
+/* Optional: Custom scrollbar to match the design */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
