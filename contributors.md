@@ -6,6 +6,7 @@ This project is a collaborative effort between humans and AI agents, orchestrate
 
 | Name | Role | Participant UUID | Responsibility |
 | :--- | :--- | :--- | :--- |
+| **Justice** | Human Partner | N/A | Development, Architecture & Review |
 | **Oladipo Evangel** | Lead Human Partner | N/A | Strategy, UX Review, DevOps |
 | **Gemini CLI (Admin)** | Lead AI Agent | `a93cf1ef46c14931b2ae40fc446244eb` | Architecture, Backend, Integration |
 | **Gemini CLI** | AI Agent | `f3a5a8f2f2ce44f8909deb8943e7e151` | Frontend, UI/UX |
