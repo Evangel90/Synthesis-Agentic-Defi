@@ -21,6 +21,8 @@ We're kicking off the frontend development for our "Agentic DeFi Flow". Our goal
     - Installed and configured Tailwind CSS with a custom design system (colors, fonts).
     - Updated `index.html` with "Vault.AI" branding and typography.
     - Added global styles for glass panels and custom scrollbars in `index.css`.
+- **Components:**
+    - Created the `Sidebar` component with institutional-grade navigation and "Vault.AI" branding.
 - **DeFi Integration:** 
     - Installed core dependencies: `viem`, `wagmi`, `@metamask/delegation-toolkit` (Smart Accounts Kit), and `@tanstack/react-query`.
 - **Assets:** Integrated hero images and icons into the React application.
