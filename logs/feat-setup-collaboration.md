@@ -14,6 +14,7 @@ We've implemented a distributed logging strategy:
 - **Contributors Guide:** Created `contributors.md` with explicit instructions on branching and logging.
 - **Distributed Logs:** Created a `logs/` directory where each feature branch maintains its own log.
 - **Amalgamation Rule:** Log contents are merged into the root `logs.md` upon PR approval.
+- **Agentic Mandates:** Created `GEMINI.md` to establish foundational rules for all agentic contributors, ensuring strict adherence to our logging and DevOps strategy.
 
 ### **3. Strategic Decisions**
 - **Git Strategy:** Decided to use a standard PR-based workflow, where I (the agent) create branches and push, and the human partner (you) reviews and merges.
