@@ -10,3 +10,5 @@ This directory contains branch-specific collaboration logs. Each log documents t
 ## **Current Active Logs**
 *   `logs/feat-setup-collaboration.md` - Initial setup of the contributor protocol and logging structure.
 *   `logs/feat-omoboi-frontend.md` - Frontend scaffolding and implementation for the DeFi intent flow.
+*   `logs/feat-backend-scaffold.md` - Backend scaffolding with Bun, Express, and essential SDKs.
+*   `logs/feat-backend-api.md` - Implementation of the core Agent execution layer and autonomous on-chain execution via ERC-7579 delegations.
