@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Icon from './Icon'
 import Button from './Button'
 import { NAV_ITEMS, BOTTOM_NAV_ITEMS } from './constants'
@@ -43,9 +44,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Main nav */}
         <nav className="flex-1 space-y-0.5 px-2">
           {NAV_ITEMS.map((item: NavItem) => (
-            <a
+            <Link
               key={item.label}
-              href="#"
+              to={item.path || '#'}
               onClick={onClose}
               className={`
                 px-4 py-2.5 flex items-center gap-3 rounded-lg transition-all text-sm
@@ -58,7 +59,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             >
               <Icon name={item.icon} className="text-[18px]" />
               <span>{item.label}</span>
-            </a>
+            </Link>
           ))}
         </nav>
 

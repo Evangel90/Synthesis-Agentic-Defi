@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import Icon from './Icon'
 
 interface TopNavProps {
@@ -17,13 +18,19 @@ export default function TopNav({ onMenuClick }: TopNavProps) {
         </button>
 
         {/* Logo */}
-        <span className="text-xl font-black text-slate-900 font-headline tracking-tight">
+        <Link to="/" className="text-xl font-black text-slate-900 font-headline tracking-tight">
           Vault.AI
-        </span>
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-6">
-          {['Dashboard', 'Assets', 'Swap', 'Invest'].map((item) => (
+          <Link
+            to="/"
+            className="text-slate-500 font-headline font-bold tracking-tight hover:text-slate-900 transition-colors text-sm"
+          >
+            Dashboard
+          </Link>
+          {['Assets', 'Swap', 'Invest'].map((item) => (
             <a
               key={item}
               href="#"

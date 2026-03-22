@@ -1,8 +1,8 @@
 import type { NavItem, SummaryRow } from './types'
 
 export const NAV_ITEMS: NavItem[] = [
-  { icon: 'grid_view', label: 'Overview' },
-  { icon: 'smart_toy', label: 'Agent Permissions', active: true },
+  { icon: 'grid_view', label: 'Overview', path: '/' },
+  { icon: 'smart_toy', label: 'Agent Permissions', active: true, path: '/agent-permissions' },
   { icon: 'shield', label: 'Wallet Security' },
   { icon: 'history', label: 'Transaction History' },
   { icon: 'fingerprint', label: 'Identity' },

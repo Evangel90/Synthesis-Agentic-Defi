@@ -2,6 +2,7 @@ export interface NavItem {
   icon: string
   label: string
   active?: boolean
+  path?: string
 }
 
 export interface ToggleItem {

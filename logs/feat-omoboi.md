@@ -20,12 +20,15 @@ Initial team collaborations led to merge conflicts in `App.tsx` and `index.css`.
 ### **3. Implementation Details**
 - **Routing:**
     - `/` (Home): Points to `VaultDashboard`.
-    - `/agent-permissions`: Placeholder route for the team's upcoming feature.
+    - `/agent-permissions`: Route for the Agent Permissions feature.
 - **Component Namespace:**
     - `src/components/vault-dashboard/`: Contains the responsive `VaultDashboard`, `Sidebar`, `DashboardPanel`, and `ChatPanel`.
 - **UI Framework:** 
     - Confirmed Tailwind CSS v4 configuration in `index.css`.
     - Verified Material Symbols integration.
+- **Integration & Navigation:**
+    - Unified the experience by linking the main dashboard sidebar to the agent permissions page.
+    - Updated the agent permissions sidebar and top navigation to link back to the main dashboard.
 - **Security:**
     - Maintained `Omoboi_Registration.md` as an untracked, ignored file.
 
@@ -34,6 +37,10 @@ To avoid conflicts, please follow this protocol:
 1. **Namespace:** Create your own folder under `src/components/` (e.g., `src/components/agent-permissions/`).
 2. **Routing:** Add your feature as a new `<Route>` in `App.tsx` rather than modifying the root dashboard.
 3. **Styles:** Use Tailwind's utility classes or scoped CSS modules.
+
+### **5. Next Steps**
+- Implement dynamic data fetching for portfolio balances using Wagmi.
+- Integrate the AI Chat logic with the MetaMask Smart Accounts Kit.
 
 ---
 *This log tracks our frontend milestones and architectural decisions.*
