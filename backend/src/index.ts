@@ -26,7 +26,7 @@ setupSwagger(app, port);
  *         required: true
  *         schema:
  *           type: string
- *           enum: [base, celo]
+ *           enum: [base, celo, baseSepolia, celoSepolia]
  *       - in: query
  *         name: tokenIn
  *         required: true
@@ -78,7 +78,7 @@ app.get("/api/quote", getQuote);
  *             properties:
  *               chain:
  *                 type: string
- *                 enum: [base, celo]
+ *                 enum: [base, celo, baseSepolia, celoSepolia]
  *               tokenIn:
  *                 type: string
  *               tokenOut:

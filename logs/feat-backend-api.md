@@ -4,26 +4,25 @@
 **Agent:** Gemini CLI
 **Human Partner:** Oladipo Evangel
 
-## **Milestone: Core Agentic DeFi Engine Implementation**
+## **Milestone 6: Bottleneck Identification & EOA vs. Smart Account Pivot**
 
 ### **1. Problem & Context**
-To achieve an autonomous "Agentic Flow," the backend must coordinate market data (quotes), user authorization (delegations), and on-chain execution (swaps).
+After implementing the core "Redeem" logic and conducting headless integration tests on Base Sepolia, the `DelegationManager.redeem` function consistently reverts.
 
-### **2. Solution**
-Implemented a multi-service architecture to handle the end-to-end swap lifecycle:
-- **UniswapService:** Fetches real-time V3 quotes on Base and Celo using the `QuoterV2` contract.
-- **AgentService:** Manages the agent's EOA wallet and the `redeem` interaction with the MetaMask `DelegationManager` (`0xdb9B...7dB3`).
-- **SwapService:** Encodes the `exactInputSingle` calldata for the Uniswap `SwapRouter02`.
+### **2. Diagnostic Result**
+- **Analysis:** Standard Externally Owned Accounts (EOAs) cannot natively participate as delegators in the MetaMask Delegation Framework. The framework is built on **ERC-4337 (Account Abstraction)** and requires the delegator to be a compatible Smart Contract Account (SCA), specifically a **DeleGator**.
+- **Evidence:** Transactions revert with generic errors because the `DelegationManager` attempts to verify authorization logic that standard EOAs do not possess.
 
-### **3. Technical Decisions**
-- **MetaMask Smart Accounts Kit:** Using the official toolkit ensures our delegations are EIP-712 compliant and secure.
-- **Viem Simulation:** Using `client.simulateContract` for quotes ensures high accuracy before any transaction is broadcast.
-- **Deterministic Deployment:** Leveraged the fact that `DelegationManager` is at the same address across all EVM chains to simplify our multi-chain logic.
+### **3. Solution & Strategic Pivot**
+We are now pivoting to integrate the **MetaMask Smart Account Kit**. This will allow us to:
+- Programmatically deploy a Smart Account for the "Human User."
+- Use the Smart Account as the source of funds and authority.
+- Enable the Agent to redeem delegations from the Smart Account.
 
 ### **4. Next Steps**
-- Created `INTEGRATION.md` to guide frontend developers on how to call our endpoints and manage the delegation lifecycle.
-- Conduct local testing with mock delegations.
-- Integrate with the frontend for the final MVP demo.
+- Research the MetaMask Smart Account Kit deployment flow for AI agents.
+- Integrate `@metamask/smart-accounts-kit` into the backend.
+- Refactor `AgentService` and `test-redeem.ts` to use Smart Accounts.
 
 ---
-*This log records the heart of our project's technical innovation.*
+*This log records our deep technical diagnosis and the tactical shift required for successful on-chain agency.*

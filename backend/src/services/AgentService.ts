@@ -1,6 +1,6 @@
 import { createWalletClient, http, type Address, createPublicClient } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { base, celo, baseSepolia, celoAlfajores } from "viem/chains";
+import { base, celo, baseSepolia, celoSepolia } from "viem/chains";
 
 export const DELEGATION_MANAGER_ADDRESS = "0xdb9B1e94B5b69Df7e401DDbedE43491141047dB3" as Address;
 
@@ -72,9 +72,9 @@ export class AgentService {
         chain: baseSepolia,
         transport: http(),
       }),
-      celoAlfajores: createWalletClient({
+      celoSepolia: createWalletClient({
         account: this.agentAccount,
-        chain: celoAlfajores,
+        chain: celoSepolia,
         transport: http(),
       }),
     };
@@ -85,15 +85,31 @@ export class AgentService {
   }
 
   async redeemDelegation(params: {
-    chain: "base" | "celo" | "baseSepolia" | "celoAlfajores";
+    chain: "base" | "celo" | "baseSepolia" | "celoSepolia";
     delegations: any[];
     executions: any[];
   }) {
     const { chain, delegations, executions } = params;
-    const client = this.clients[chain];
+    const walletClient = this.clients[chain];
+
+    // We need a public client for simulation
+    const publicClient = createPublicClient({
+      chain: walletClient.chain,
+      transport: http(),
+    });
 
     try {
-      const hash = await client.writeContract({
+      console.log("Simulating redeem transaction...");
+      await publicClient.simulateContract({
+        address: DELEGATION_MANAGER_ADDRESS,
+        abi: DELEGATION_MANAGER_ABI,
+        functionName: "redeem",
+        args: [delegations, executions],
+        account: this.agentAccount,
+      });
+
+      console.log("Simulation successful. Broadcasting...");
+      const hash = await walletClient.writeContract({
         address: DELEGATION_MANAGER_ADDRESS,
         abi: DELEGATION_MANAGER_ABI,
         functionName: "redeem",
@@ -105,8 +121,11 @@ export class AgentService {
         transactionHash: hash,
       };
     } catch (error: any) {
-      console.error(`Error redeeming delegation on ${chain}:`, error);
-      throw new Error(`Failed to redeem delegation: ${error.message}`);
+      // Extract detailed revert reason if available
+      const reason = error.shortMessage || error.message;
+      console.error(`Error redeeming delegation on ${chain}:`, reason);
+      throw new Error(`Execution Reverted: ${reason}`);
     }
   }
+
 }

@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { UniswapService } from "../services/UniswapService";
-import { SwapService, SWAP_ROUTER_02_ADDRESSES } from "../services/SwapService";
+import { SwapService, UNIVERSAL_ROUTER_ADDRESSES } from "../services/SwapService";
 import { AgentService } from "../services/AgentService";
-import { Address, parseUnits } from "viem";
+import { type Address, parseUnits } from "viem";
 
 const uniswapService = new UniswapService();
 const swapService = new SwapService();
@@ -29,7 +29,7 @@ export const redeemSwap = async (req: Request, res: Response) => {
     
     // 1. Get the current quote to determine amountOutMinimum (e.g., 0.5% slippage)
     const quote = await uniswapService.getQuote({
-      chain: (chain as "base" | "celo"),
+      chain: (chain as "base" | "celo" | "baseSepolia" | "celoSepolia"),
       tokenIn: tokenIn as Address,
       tokenOut: tokenOut as Address,
       amountIn: amountInBigInt,
@@ -50,17 +50,28 @@ export const redeemSwap = async (req: Request, res: Response) => {
 
     // 3. Prepare the execution struct for the DelegationManager
     const execution = {
-      target: SWAP_ROUTER_02_ADDRESSES[chain as "base" | "celo"],
-      value: 0n,
+      target: UNIVERSAL_ROUTER_ADDRESSES[chain as "base" | "celo" | "baseSepolia" | "celoSepolia"],
+      value: BigInt(0),
       callData: executionCallData,
     };
 
-    // 4. Redeem the delegation and broadcast the transaction
+    // 4. Properly format the delegation (convert string salt back to BigInt)
+    const formattedDelegation = {
+      ...delegation,
+      salt: BigInt(delegation.salt),
+      caveats: delegation.caveats.map((c: any) => ({
+        enforcer: c.enforcer as Address,
+        terms: c.terms as `0x${string}`,
+      })),
+    };
+
+    // 5. Redeem the delegation and broadcast the transaction
     const result = await agentService.redeemDelegation({
-      chain: (chain as "base" | "celo"),
-      delegations: [delegation],
+      chain: (chain as "base" | "celo" | "baseSepolia" | "celoSepolia"),
+      delegations: [formattedDelegation],
       executions: [execution],
     });
+
 
     res.json({
       success: true,
