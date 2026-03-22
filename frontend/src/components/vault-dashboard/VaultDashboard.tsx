@@ -2,10 +2,13 @@ import { useState } from 'react';
 import Sidebar from './Sidebar';
 import DashboardPanel from './DashboardPanel';
 import ChatPanel from './ChatPanel';
+import { useVaultLogic } from './useVaultLogic';
 
 export default function VaultDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  
+  const logic = useVaultLogic();
 
   return (
     <div className="flex h-screen w-full bg-surface text-on-surface overflow-hidden font-body relative">
@@ -18,11 +21,18 @@ export default function VaultDashboard() {
         <DashboardPanel 
           onOpenSidebar={() => setIsSidebarOpen(true)}
           onOpenChat={() => setIsChatOpen(true)}
+          portfolioValue={logic.portfolioValue}
+          dailyChange={logic.dailyChange}
         />
         
         <ChatPanel 
           isOpen={isChatOpen}
           onClose={() => setIsChatOpen(false)}
+          messages={logic.messages}
+          inputValue={logic.inputValue}
+          setInputValue={logic.setInputValue}
+          onSendMessage={logic.sendMessage}
+          isTyping={logic.isTyping}
         />
       </main>
 

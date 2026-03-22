@@ -1,9 +1,22 @@
 interface ChatPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  messages: any[];
+  inputValue: string;
+  setInputValue: (v: string) => void;
+  onSendMessage: (text: string) => void;
+  isTyping: boolean;
 }
 
-export default function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
+export default function ChatPanel({ 
+  isOpen, 
+  onClose, 
+  messages, 
+  inputValue, 
+  setInputValue, 
+  onSendMessage, 
+  isTyping 
+}: ChatPanelProps) {
   return (
     <>
       {isOpen && (
@@ -44,68 +57,73 @@ export default function ChatPanel({ isOpen, onClose }: ChatPanelProps) {
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 md:space-y-8 custom-scrollbar">
-          <div className="flex justify-end">
-            <div className="bg-primary text-on-primary px-4 md:px-5 py-2.5 md:py-3 rounded-2xl rounded-tr-none max-w-[85%] shadow-sm">
-              <p className="text-xs md:text-sm font-medium">Send $10 to my mum</p>
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {msg.role === 'user' ? (
+                <div className="bg-primary text-on-primary px-4 md:px-5 py-2.5 md:py-3 rounded-2xl rounded-tr-none max-w-[85%] shadow-sm">
+                  <p className="text-xs md:text-sm font-medium">{msg.content}</p>
+                </div>
+              ) : (
+                <div className="space-y-4 max-w-[95%] sm:max-w-[90%] w-full">
+                  <div className="flex space-x-2 md:space-x-3 items-end">
+                    <div className="w-6 h-6 rounded-full bg-primary-container hidden xs:flex items-center justify-center shrink-0">
+                      <span className="material-symbols-outlined text-[10px] text-on-primary-container">smart_toy</span>
+                    </div>
+                    {msg.type === 'progress' ? (
+                      <div className="bg-surface-container-lowest border border-outline-variant/10 p-4 md:p-5 rounded-2xl xs:rounded-bl-none shadow-sm w-full">
+                        <h4 className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-on-surface-variant/60 mb-3 md:mb-4">Transaction Progress</h4>
+                        <div className="space-y-2 md:space-y-3">
+                          <div className="flex items-start text-xs md:text-sm font-medium text-on-surface/80">
+                            <span className="material-symbols-outlined text-tertiary mr-2 md:mr-3 text-base md:text-lg shrink-0">check_circle</span>
+                            <span className="mt-0.5">Checking available balance</span>
+                          </div>
+                          <div className="flex items-start text-xs md:text-sm font-medium text-error">
+                            <span className="material-symbols-outlined mr-2 md:mr-3 text-base md:text-lg shrink-0">cancel</span>
+                            <span className="mt-0.5">Checking contacts for 'Mum'</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-surface-container-lowest border border-outline-variant/10 p-4 md:p-5 rounded-2xl xs:rounded-bl-none shadow-sm">
+                        <p className="text-xs md:text-sm text-on-surface font-medium leading-relaxed">{msg.content}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-
-          <div className="flex justify-start">
-            <div className="space-y-4 max-w-[95%] sm:max-w-[90%] w-full">
-              <div className="flex space-x-2 md:space-x-3 items-end">
-                <div className="w-6 h-6 rounded-full bg-primary-container hidden xs:flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[10px] text-on-primary-container">smart_toy</span>
-                </div>
-                <div className="bg-surface-container-lowest border border-outline-variant/10 p-4 md:p-5 rounded-2xl xs:rounded-bl-none shadow-sm w-full">
-                  <h4 className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-on-surface-variant/60 mb-3 md:mb-4">Transaction Progress</h4>
-                  
-                  <div className="space-y-2 md:space-y-3 mb-5 md:mb-6">
-                    <div className="flex items-start text-xs md:text-sm font-medium text-on-surface/80">
-                      <span className="material-symbols-outlined text-tertiary mr-2 md:mr-3 text-base md:text-lg shrink-0">check_circle</span>
-                      <span className="mt-0.5">Checking available balance</span>
-                    </div>
-                    <div className="flex items-start text-xs md:text-sm font-medium text-error">
-                      <span className="material-symbols-outlined mr-2 md:mr-3 text-base md:text-lg shrink-0">cancel</span>
-                      <span className="mt-0.5">Checking contacts for 'Mum'</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-error-container/20 border border-error/10 p-3 md:p-4 rounded-xl mb-5 md:mb-6">
-                    <p className="text-xs md:text-sm text-on-error-container font-medium leading-relaxed">
-                      Mum not found in your contacts. Please paste her wallet address to save as a beneficiary and proceed.
-                    </p>
-                  </div>
-
-                  <div className="space-y-3 md:space-y-4">
-                    <div className="relative">
-                      <input 
-                        className="w-full bg-surface text-xs md:text-sm border-0 focus:ring-2 focus:ring-primary rounded-xl px-4 py-2.5 md:py-3 text-on-surface placeholder:text-on-surface-variant/40 outline-none" 
-                        placeholder="Paste wallet address (0x...)" 
-                        type="text"
-                      />
-                    </div>
-                    <button className="w-full bg-primary text-on-primary font-bold py-2.5 md:py-3 rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center space-x-2 shadow-sm">
-                      <span className="text-xs md:text-sm">Save &amp; Send</span>
-                      <span className="material-symbols-outlined text-sm md:text-base">send</span>
-                    </button>
-                  </div>
-                </div>
+          ))}
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="bg-surface-container-lowest border border-outline-variant/10 px-4 py-2 rounded-2xl animate-pulse text-xs text-on-surface-variant">
+                Assistant is thinking...
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="p-4 md:p-8 bg-surface-container-low/80 backdrop-blur-md border-t border-outline-variant/10">
-          <div className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-1.5 md:p-2 flex items-center focus-within:ring-2 focus-within:ring-primary/20 transition-all shadow-sm">
+          <form 
+            className="bg-surface-container-lowest border border-outline-variant/20 rounded-2xl p-1.5 md:p-2 flex items-center focus-within:ring-2 focus-within:ring-primary/20 transition-all shadow-sm"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSendMessage(inputValue);
+            }}
+          >
             <input 
               className="flex-1 bg-transparent border-0 focus:ring-0 text-xs md:text-sm py-2.5 px-3 md:px-4 text-on-surface placeholder:text-on-surface-variant/50 outline-none" 
               placeholder="Ask me to swap, send, or invest..." 
               type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
             />
-            <button className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all shrink-0">
+            <button 
+              type="submit"
+              className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all shrink-0"
+            >
               <span className="material-symbols-outlined text-sm md:text-base">send</span>
             </button>
-          </div>
+          </form>
         </div>
       </section>
     </>

@@ -1,9 +1,16 @@
 interface DashboardPanelProps {
   onOpenSidebar: () => void;
   onOpenChat: () => void;
+  portfolioValue: number;
+  dailyChange: number;
 }
 
-export default function DashboardPanel({ onOpenSidebar, onOpenChat }: DashboardPanelProps) {
+export default function DashboardPanel({ 
+  onOpenSidebar, 
+  onOpenChat, 
+  portfolioValue, 
+  dailyChange 
+}: DashboardPanelProps) {
   return (
     <section className="w-full lg:w-[60%] h-full bg-surface p-6 md:p-8 lg:p-10 overflow-y-auto custom-scrollbar">
       <header className="flex justify-between items-center mb-10 md:mb-12">
@@ -41,12 +48,14 @@ export default function DashboardPanel({ onOpenSidebar, onOpenChat }: DashboardP
         </div>
       </header>
 
-      <div className="mb-12 md:mb-16">
-        <span className="text-xs md:text-sm font-medium text-on-surface-variant/60 mb-2 block">Total Portfolio Value</span>
-        <h1 className="font-headline text-4xl sm:text-5xl md:text-[3.5rem] font-extrabold text-on-surface tracking-tight leading-none break-all">$12,450.00</h1>
+      <div className="mb-12 md:mb-16 transition-all duration-500">
+        <span className="text-xs md:text-sm font-medium text-on-surface-variant/60 mb-2 block text-pulse">Total Portfolio Value</span>
+        <h1 className="font-headline text-4xl sm:text-5xl md:text-[3.5rem] font-extrabold text-on-surface tracking-tight leading-none break-all">
+          ${portfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </h1>
         <div className="mt-4 flex items-center text-tertiary font-semibold text-xs md:text-sm">
           <span className="material-symbols-outlined text-sm mr-1">trending_up</span>
-          <span>+4.2% ($512.10) today</span>
+          <span>+{dailyChange}% today</span>
         </div>
       </div>
 
