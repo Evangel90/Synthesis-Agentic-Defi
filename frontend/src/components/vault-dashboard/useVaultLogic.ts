@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
 
+export type VaultChatMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+  type?: 'progress' | 'text';
+};
+
 export const useVaultLogic = () => {
   // --- Portfolio State ---
   const [portfolioValue, setPortfolioValue] = useState(12450.00);
@@ -9,12 +15,16 @@ export const useVaultLogic = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setPortfolioValue(prev => prev + (Math.random() * 10 - 5));
+      setDailyChange(prev => {
+        const next = prev + (Math.random() * 0.6 - 0.3);
+        return Number(next.toFixed(2));
+      });
     }, 5000);
     return () => clearInterval(interval);
   }, []);
 
   // --- Chat State ---
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<VaultChatMessage[]>([
     { role: 'user', content: 'Send $10 to my mum' },
     { role: 'assistant', content: 'Processing transaction...', type: 'progress' }
   ]);

@@ -1,7 +1,9 @@
+import type { VaultChatMessage } from './useVaultLogic';
+
 interface ChatPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  messages: any[];
+  messages: VaultChatMessage[];
   inputValue: string;
   setInputValue: (v: string) => void;
   onSendMessage: (text: string) => void;
