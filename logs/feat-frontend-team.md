@@ -25,6 +25,7 @@ We're kicking off the frontend development for our "Agentic DeFi Flow". Our goal
     - Created the `Sidebar` component with institutional-grade navigation and "Vault.AI" branding.
 - **DeFi Integration:** 
     - Installed core dependencies: `viem`, `wagmi`, `@metamask/delegation-toolkit`, and `@tanstack/react-query`.
+    - Installed core dependencies: `viem`, `wagmi`, `@metamask/delegation-toolkit` (Smart Accounts Kit), and `@tanstack/react-query`.
 - **Assets:** Integrated hero images and icons into the React application.
 
 ### **4. Next Steps**
