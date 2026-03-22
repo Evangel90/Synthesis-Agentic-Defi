@@ -12,6 +12,7 @@ import VaultDashboard from './components/vault-dashboard/VaultDashboard';
 // --- TEAM IMPORTS START ---
 // Example: import MyFeature from './components/my-feature';
 import { SignIn } from './components/Sign/sign';
+import AgentPermissions from './components/agent-permissions';
 // --- TEAM IMPORTS END ---
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
         {/* Agents: Add your routes here */}
         <Route path="/agent-permissions" element={<div className="p-10">Agent Permissions Placeholder</div>} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/agent-permissions" element={<AgentPermissions />} />
         {/* --- TEAM ROUTES END --- */}
       </Routes>
     </Router>
