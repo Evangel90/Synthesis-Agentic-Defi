@@ -1,8 +1,23 @@
-  import Button from './Button'
+import { useDevDelegationSignature } from '../delegate/useDevDelegationSignature'
+import type { DevDelegationConfig } from '../delegate/types'
+import Button from './Button'
 import Card from './Card'
 import { SUMMARY_ROWS } from './constants'
 
-export default function ConfirmDelegationCard() {
+export default function ConfirmDelegationCard({
+  spendingLimit,
+  allowStaking,
+  allowSwaps,
+  allowGasSponsorship,
+}: DevDelegationConfig) {
+  const { buttonLabel, error, signature, signDelegation, isBusy, status } =
+    useDevDelegationSignature({
+      spendingLimit,
+      allowStaking,
+      allowSwaps,
+      allowGasSponsorship,
+    })
+
   return (
     <Card className="border border-slate-200">
       {/* Badge + heading */}
@@ -30,13 +45,34 @@ export default function ConfirmDelegationCard() {
 
       {/* CTA */}
       <Button
+        type="button"
         variant="primary"
         size="lg"
         icon="edit_note"
         className="font-bold text-sm py-3 rounded-xl shadow-lg shadow-blue-500/25"
+        onClick={signDelegation}
+        disabled={isBusy}
       >
-        Sign Delegation Transaction
+        {buttonLabel}
       </Button>
+
+      {status === 'success' ? (
+        <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+          Dummy signature created for development.
+        </div>
+      ) : null}
+
+      {error ? (
+        <div className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+          {error}
+        </div>
+      ) : null}
+
+      {signature ? (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] text-slate-500 break-all">
+          Signature: {signature}
+        </div>
+      ) : null}
 
       {/* Footer */}
       <div className="mt-5 flex items-center justify-center gap-2">
