@@ -4,7 +4,7 @@
     "": {
       "name": "backend",
       "dependencies": {
-        "@metamask/delegation-toolkit": "^0.13.0",
+        "@metamask/smart-accounts-kit": "^0.4.0-beta.1",
         "axios": "^1.13.6",
         "cors": "^2.8.6",
         "dotenv": "^17.3.1",
@@ -47,17 +47,17 @@
 
     "@jsdevtools/ono": ["@jsdevtools/ono@7.1.3", "", {}, "sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg=="],
 
-    "@metamask/7715-permission-types": ["@metamask/7715-permission-types@0.3.0", "", {}, "sha512-+bqFNe6/YCe2LZapiVJO3/hn7BSJLExYT+cDJS1spJocPeVsTyURv3IjblZxRqTOv+igTwrYbh45LvdkgzxkZQ=="],
+    "@metamask/7715-permission-types": ["@metamask/7715-permission-types@0.5.0", "", {}, "sha512-UTlAXhfVM83/dCtghIqZiPqJmeGa4KI2HhkKYjmeP0oFtwzsgDwFfNakdICC4VX82338AiyVVtbEFyx6t7SE1w=="],
 
     "@metamask/abi-utils": ["@metamask/abi-utils@3.0.0", "", { "dependencies": { "@metamask/superstruct": "^3.1.0", "@metamask/utils": "^11.0.1" } }, "sha512-a/l0DiSIr7+CBYVpHygUa3ztSlYLFCQMsklLna+t6qmNY9+eIO5TedNxhyIyvaJ+4cN7TLy0NQFbp9FV3X2ktg=="],
 
-    "@metamask/delegation-abis": ["@metamask/delegation-abis@0.11.0", "", {}, "sha512-tnNGFDLQ5jfgPhHJaT5JwvF759nja1iGAG00REbk1Ufir+TxjxTmF8L9MbJifZmUh4fnyqV4Ik6NAOYVNBPVBg=="],
+    "@metamask/delegation-abis": ["@metamask/delegation-abis@0.12.0-beta.0", "", {}, "sha512-2I+nk15BSCWy2YTNE3bxMxqTDUqUJBque5A91wXqn0e3NYLzSg3DEdtc8VebUVbgP9IoFhRhHioPwzd/z+xPoQ=="],
 
-    "@metamask/delegation-core": ["@metamask/delegation-core@0.2.0", "", { "dependencies": { "@metamask/abi-utils": "^3.0.0", "@metamask/utils": "^11.4.0", "@noble/hashes": "^1.8.0" } }, "sha512-leP40qoxhTmexfeY/neZ9XkhmUiq8fHh3ax4wmmTB5CG6VuXStn2LzLz875RiBtjwU3c4IqaZljxvwC1dUuWVw=="],
+    "@metamask/delegation-core": ["@metamask/delegation-core@0.3.0", "", { "dependencies": { "@metamask/abi-utils": "^3.0.0", "@metamask/utils": "^11.4.0", "@noble/hashes": "^1.8.0" } }, "sha512-a0vMu0pIOKD8AydSdSI991SY6BN0XzGhyXoaKbNg55NchyTyNMBuoAXZ92GS8+/jGtyIouQBglh6CUxhZZHmVw=="],
 
-    "@metamask/delegation-deployments": ["@metamask/delegation-deployments@0.12.0", "", {}, "sha512-9SB5DhLAnbpIWbFxP3UKPXLhCt8iiRjBBjZ7hqF5dMXy9buBEDpCRg+FJYRxYRecwporrTVrv+NfKUyCbL2ncw=="],
+    "@metamask/delegation-deployments": ["@metamask/delegation-deployments@0.16.0", "", {}, "sha512-Fm+m+ZPQ1RC0V/PK0Qsoznaeom1ihAoQ7LX2qZl9OmmIKdoyVZQH3gp59hwpPuMyeSgNZ8Cqe3TBi61B7Ja+Pw=="],
 
-    "@metamask/delegation-toolkit": ["@metamask/delegation-toolkit@0.13.0", "", { "dependencies": { "@metamask/7715-permission-types": "^0.3.0", "@metamask/delegation-abis": "^0.11.0", "@metamask/delegation-core": "^0.2.0", "@metamask/delegation-deployments": "^0.12.0", "buffer": "^6.0.3", "webauthn-p256": "^0.0.10" }, "peerDependencies": { "viem": "^2.31.4" } }, "sha512-SVc2gcnKQ8KQodugfuXMs49pHO1x9AYw3Wmdg4yBEsgm5TF5zPpWFmAj+bOL8q+Fn+mHJAibFIrJBtS970G9Dw=="],
+    "@metamask/smart-accounts-kit": ["@metamask/smart-accounts-kit@0.4.0-beta.1", "", { "dependencies": { "@metamask/7715-permission-types": "^0.5.0", "@metamask/delegation-abis": "^0.12.0-beta.0", "@metamask/delegation-core": "^0.3.0", "@metamask/delegation-deployments": "^0.16.0", "buffer": "^6.0.3", "webauthn-p256": "^0.0.10" }, "peerDependencies": { "viem": "^2.31.4" } }, "sha512-VSU27YjSpo3AEKvpLY3niwUSruMlnXu1R59eQgY4pqGE1xjKPi29kANbTrGzpH9KGq2PtJmpG5oIhuA7YX2+5g=="],
 
     "@metamask/superstruct": ["@metamask/superstruct@3.2.1", "", {}, "sha512-fLgJnDOXFmuVlB38rUN5SmU7hAFQcCjrg3Vrxz67KTY7YHFnSNEKvX4avmEBdOI0yTCxZjwMCFEqsC8k2+Wd3g=="],
 
