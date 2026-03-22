@@ -21,7 +21,7 @@ Implemented a multi-service architecture to handle the end-to-end swap lifecycle
 - **Deterministic Deployment:** Leveraged the fact that `DelegationManager` is at the same address across all EVM chains to simplify our multi-chain logic.
 
 ### **4. Next Steps**
-- Implement `RedeemController.ts` to expose the execution endpoint.
+- Created `INTEGRATION.md` to guide frontend developers on how to call our endpoints and manage the delegation lifecycle.
 - Conduct local testing with mock delegations.
 - Integrate with the frontend for the final MVP demo.
 
