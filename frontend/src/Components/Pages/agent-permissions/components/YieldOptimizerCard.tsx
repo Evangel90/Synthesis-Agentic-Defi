@@ -1,5 +1,3 @@
-import ethereumCoin from '../../../../assets/ethereum-coin.svg'
-
 export default function YieldOptimizerCard() {
   return (
     <div className="rounded-xl overflow-hidden relative h-48 group border border-slate-200 bg-white shadow-sm">
