@@ -32,6 +32,8 @@ export default function VaultDashboard() {
           inputValue={logic.inputValue}
           setInputValue={logic.setInputValue}
           onSendMessage={logic.sendMessage}
+          onExecuteSwap={logic.executeSwap}
+          onClearChat={logic.clearMessages}
           isTyping={logic.isTyping}
         />
       </main>
