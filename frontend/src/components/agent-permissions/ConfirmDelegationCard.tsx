@@ -1,4 +1,4 @@
-import { useDevDelegationSignature } from '../delegate/useDevDelegationSignature'
+import { useDelegationSignature } from '../delegate/useDelegationSignature'
 import type { DevDelegationConfig } from '../delegate/types'
 import Button from './Button'
 import Card from './Card'
@@ -10,8 +10,16 @@ export default function ConfirmDelegationCard({
   allowSwaps,
   allowGasSponsorship,
 }: DevDelegationConfig) {
-  const { buttonLabel, error, signature, signDelegation, isBusy, status } =
-    useDevDelegationSignature({
+  const {
+    buttonLabel,
+    delegationPayload,
+    error,
+    signature,
+    signDelegation,
+    isBusy,
+    smartAccountAddress,
+    status,
+  } = useDelegationSignature({
       spendingLimit,
       allowStaking,
       allowSwaps,
@@ -58,7 +66,7 @@ export default function ConfirmDelegationCard({
 
       {status === 'success' ? (
         <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
-          Dummy signature created for development.
+          Authority delegated to the backend agent for the current smart account.
         </div>
       ) : null}
 
@@ -72,6 +80,18 @@ export default function ConfirmDelegationCard({
         <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] text-slate-500 break-all">
           Signature: {signature}
         </div>
+      ) : null}
+
+      {smartAccountAddress ? (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] text-slate-500 break-all">
+          Smart Account: {smartAccountAddress}
+        </div>
+      ) : null}
+
+      {delegationPayload ? (
+        <pre className="mt-3 max-h-44 overflow-auto rounded-xl border border-slate-200 bg-slate-950 px-3 py-2 text-[11px] text-slate-200 break-all">
+          {JSON.stringify(delegationPayload, null, 2)}
+        </pre>
       ) : null}
 
       {/* Footer */}
