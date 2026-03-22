@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useDisconnect } from 'wagmi';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -6,6 +7,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { disconnect } = useDisconnect();
+
   return (
     <>
       {isOpen && (
@@ -60,10 +63,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <span className="material-symbols-outlined mr-3 text-lg">help</span>
             <span className="text-sm font-medium">Support</span>
           </a>
-          <a className="flex items-center text-on-surface/70 py-3 px-2 hover:text-error transition-colors rounded-lg" href="#">
+          <button 
+            onClick={() => disconnect()}
+            className="w-full flex items-center text-on-surface/70 py-3 px-2 hover:text-error transition-colors rounded-lg"
+          >
             <span className="material-symbols-outlined mr-3 text-lg">logout</span>
             <span className="text-sm font-medium">Sign Out</span>
-          </a>
+          </button>
         </div>
       </aside>
     </>

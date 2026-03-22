@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useAccount } from 'wagmi';
 import VaultDashboard from './components/vault-dashboard/VaultDashboard';
 
 /* 
@@ -6,27 +7,40 @@ import VaultDashboard from './components/vault-dashboard/VaultDashboard';
   1. DO NOT remove existing imports.
   2. Add your feature import in the "TEAM IMPORTS" section.
   3. Add your <Route> inside the <Routes> block.
-  4. DO NOT overwrite the root path (path="/").
 */
 
 // --- TEAM IMPORTS START ---
-// Example: import MyFeature from './components/my-feature';
 import { SignIn } from './components/Sign/sign';
 import AgentPermissions from './components/agent-permissions';
 // --- TEAM IMPORTS END ---
 
 export default function App() {
+  const { isConnected } = useAccount();
+
   return (
     <Router>
       <Routes>
-        {/* MAIN DASHBOARD (DO NOT EDIT) */}
-        <Route path="/" element={<VaultDashboard />} />
+        {/* PUBLIC ROUTE: Sign In */}
+        <Route 
+          path="/sign-in" 
+          element={!isConnected ? <SignIn /> : <Navigate to="/" replace />} 
+        />
+
+        {/* PROTECTED ROUTES: Only show if connected */}
+        <Route 
+          path="/" 
+          element={isConnected ? <VaultDashboard /> : <Navigate to="/sign-in" replace />} 
+        />
         
         {/* --- TEAM ROUTES START --- */}
-        {/* Agents: Add your routes here */}
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/agent-permissions" element={<AgentPermissions />} />
+        <Route 
+          path="/agent-permissions" 
+          element={isConnected ? <AgentPermissions /> : <Navigate to="/sign-in" replace />} 
+        />
         {/* --- TEAM ROUTES END --- */}
+
+        {/* Catch-all redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

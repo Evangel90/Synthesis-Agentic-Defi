@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useDisconnect } from 'wagmi'
 import Icon from './Icon'
 import Button from './Button'
 import { NAV_ITEMS, BOTTOM_NAV_ITEMS } from './constants'
@@ -10,6 +11,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const { disconnect } = useDisconnect();
+
   return (
     <>
       {/* Mobile overlay */}
@@ -73,15 +76,19 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Bottom nav */}
         <div className="pb-6 space-y-0.5 border-t border-slate-200 pt-4 px-2">
           {BOTTOM_NAV_ITEMS.map((item: NavItem) => (
-            <a
+            <button
               key={item.label}
-              href="#"
-              onClick={onClose}
-              className="text-slate-500 px-4 py-2.5 flex items-center gap-3 rounded-lg hover:text-slate-900 hover:bg-slate-100 transition-all"
+              onClick={() => {
+                if (item.label === 'Sign Out') {
+                  disconnect();
+                }
+                onClose();
+              }}
+              className="w-full text-slate-500 px-4 py-2.5 flex items-center gap-3 rounded-lg hover:text-error hover:bg-slate-100 transition-all"
             >
               <Icon name={item.icon} className="text-[18px]" />
               <span>{item.label}</span>
-            </a>
+            </button>
           ))}
         </div>
       </aside>
