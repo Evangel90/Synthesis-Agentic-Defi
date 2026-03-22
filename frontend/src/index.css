@@ -51,10 +51,12 @@
 
   --font-headline: "Manrope", sans-serif;
   --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
 }
 
 @layer base {
   body {
+    margin: 0;
     font-family: var(--font-body);
     background-color: var(--color-surface);
   }
@@ -72,16 +74,23 @@
     backdrop-filter: blur(24px);
   }
 
+  .soft-shadow {
+    box-shadow: 0 20px 40px rgba(25, 28, 29, 0.04);
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
   }
+
   .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
   }
+
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #c3c6d7;
     border-radius: 9999px;
   }
+
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #737686;
   }

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import VaultDashboard from './components/vault-dashboard/VaultDashboard';
+import { SignIn } from './Components/sign';
 
 // Placeholder for team members' components
 const AgentPermissionsPlaceholder = () => (
@@ -14,11 +15,9 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Main Entry Point: Your responsive dashboard */}
         <Route path="/" element={<VaultDashboard />} />
-        
-        {/* Team features: They will add their routes here */}
         <Route path="/agent-permissions" element={<AgentPermissionsPlaceholder />} />
+        <Route path="/sign-in" element={<SignIn />} />
       </Routes>
     </Router>
   );
