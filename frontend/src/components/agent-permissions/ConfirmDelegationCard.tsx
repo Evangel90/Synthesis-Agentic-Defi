@@ -1,8 +1,31 @@
-  import Button from './Button'
+import { useDelegationSignature } from '../delegate/useDelegationSignature'
+import type { DevDelegationConfig } from '../delegate/types'
+import Button from './Button'
 import Card from './Card'
 import { SUMMARY_ROWS } from './constants'
 
-export default function ConfirmDelegationCard() {
+export default function ConfirmDelegationCard({
+  spendingLimit,
+  allowStaking,
+  allowSwaps,
+  allowGasSponsorship,
+}: DevDelegationConfig) {
+  const {
+    buttonLabel,
+    delegationPayload,
+    error,
+    signature,
+    signDelegation,
+    isBusy,
+    smartAccountAddress,
+    status,
+  } = useDelegationSignature({
+      spendingLimit,
+      allowStaking,
+      allowSwaps,
+      allowGasSponsorship,
+    })
+
   return (
     <Card className="border border-slate-200">
       {/* Badge + heading */}
@@ -30,13 +53,46 @@ export default function ConfirmDelegationCard() {
 
       {/* CTA */}
       <Button
+        type="button"
         variant="primary"
         size="lg"
         icon="edit_note"
         className="font-bold text-sm py-3 rounded-xl shadow-lg shadow-blue-500/25"
+        onClick={signDelegation}
+        disabled={isBusy}
       >
-        Sign Delegation Transaction
+        {buttonLabel}
       </Button>
+
+      {status === 'success' ? (
+        <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">
+          Authority delegated to the backend agent for the current smart account.
+        </div>
+      ) : null}
+
+      {error ? (
+        <div className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+          {error}
+        </div>
+      ) : null}
+
+      {signature ? (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] text-slate-500 break-all">
+          Signature: {signature}
+        </div>
+      ) : null}
+
+      {smartAccountAddress ? (
+        <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] text-slate-500 break-all">
+          Smart Account: {smartAccountAddress}
+        </div>
+      ) : null}
+
+      {delegationPayload ? (
+        <pre className="mt-3 max-h-44 overflow-auto rounded-xl border border-slate-200 bg-slate-950 px-3 py-2 text-[11px] text-slate-200 break-all">
+          {JSON.stringify(delegationPayload, null, 2)}
+        </pre>
+      ) : null}
 
       {/* Footer */}
       <div className="mt-5 flex items-center justify-center gap-2">

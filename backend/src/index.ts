@@ -4,6 +4,7 @@ import cors from "cors";
 import { setupSwagger } from "./config/swagger";
 import { getQuote } from "./controllers/QuoteController";
 import { redeemSwap } from "./controllers/RedeemController";
+import { getAgentInfo } from "./controllers/AgentController";
 import { handleChat } from "./controllers/ChatController";
 
 dotenv.config();
@@ -63,6 +64,7 @@ setupSwagger(app, port);
  *         description: Success
  */
 app.get("/api/quote", getQuote);
+app.get("/api/agent", getAgentInfo);
 
 /**
  * @openapi
