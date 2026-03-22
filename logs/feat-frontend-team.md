@@ -34,3 +34,4 @@ We're kicking off the frontend development for our "Agentic DeFi Flow". Our goal
 
 ---
 *This log will track all our frontend development milestones for the Synthesis hackathon.*
+# Frontend Team Log\n\nThis is the collective log for the Frontend Team. Individual contributors should use their own files (e.g., logs/feat-omoboi.md).
