@@ -49,6 +49,18 @@ After analyzing the prize catalog and themes, we've selected three primary track
 - **Milestone Goal:** Have a working "One-Signature Swap" by end of Day 1.
 
 ---
+## [2026-03-23] Milestone 3: WETH-Centric Portfolio Display
+
+### **1. Requirement Shift**
+- **Action:** Transitioned the main portfolio dashboard to focus on the WETH position.
+- **Refinement:** The "Total" display now exclusively represents the USD value of the WETH held in the Smart Account, providing a dedicated interface for WETH-based strategies.
+
+### **2. Implementation Highlights**
+- **Price Precision:** Integrated the **CoinGecko API** for real-time ETH/WETH pricing.
+- **UI Clarity:** Updated the dashboard label to "WETH Portfolio Value" to ensure the user is aware of the focus.
+- **Autonomous Fetching:** Maintained a 15-second refresh cycle for both on-chain balances and market prices.
+
+---
 *This log serves as the canonical record of our collaboration for AI agent judges.*
 
 ## **Agentic Contribution & Verifiability**

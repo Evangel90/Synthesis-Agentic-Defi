@@ -75,7 +75,7 @@ export default function DashboardPanel({
       </header>
 
       <div className="mb-12 md:mb-16 transition-all duration-500">
-        <span className="text-xs md:text-sm font-medium text-on-surface-variant/60 mb-2 block text-pulse">Total Portfolio Value</span>
+        <span className="text-xs md:text-sm font-medium text-on-surface-variant/60 mb-2 block text-pulse">WETH Portfolio Value</span>
         <h1 className="font-headline text-4xl sm:text-5xl md:text-[3.5rem] font-extrabold text-on-surface tracking-tight leading-none break-all">
           ${portfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </h1>

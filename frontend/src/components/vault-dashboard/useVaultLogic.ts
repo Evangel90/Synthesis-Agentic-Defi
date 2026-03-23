@@ -76,15 +76,26 @@ export const useVaultLogic = () => {
       }) as bigint;
       const wethFormatted = (Number(wethBalance) / 1e18).toString();
 
-      // Simple mock prices
-      const ethPrice = 3500;
+      // Fetch real price if possible, fallback to 3500
+      let ethPrice = 3500;
+      try {
+        const priceRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+        const priceData = await priceRes.json();
+        if (priceData.ethereum?.usd) {
+          ethPrice = priceData.ethereum.usd;
+        }
+      } catch (e) {
+        console.warn("Failed to fetch ETH price, using fallback", e);
+      }
+
       const usdcPrice = 1;
       
       const ethValueUsd = (parseFloat(ethFormatted) * ethPrice).toFixed(2);
       const usdcValueUsd = (parseFloat(usdcFormatted) * usdcPrice).toFixed(2);
       const wethValueUsd = (parseFloat(wethFormatted) * ethPrice).toFixed(2);
 
-      const totalValue = parseFloat(ethValueUsd) + parseFloat(usdcValueUsd) + parseFloat(wethValueUsd);
+      // Set portfolio value to ONLY the WETH value as requested
+      const totalValue = parseFloat(wethValueUsd);
       setPortfolioValue(totalValue);
 
       setAssets([
