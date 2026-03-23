@@ -17,14 +17,14 @@ export default function SpendingLimitCard({ value, onChange }: SpendingLimitCard
           <h3 className="font-headline text-base font-bold text-slate-900">
             Daily Spending Limit
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-on-surface-variant/70 mt-0.5">
             Max auto-approval threshold per 24h
           </p>
         </div>
 
         {/* Input box */}
         <div className="flex items-center bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg">
-          <span className="text-slate-500 font-bold mr-1 text-sm">$</span>
+          <span className="text-on-surface-variant/70 font-bold mr-1 text-sm">$</span>
           <input
             type="text"
             value={value.toFixed(2)}

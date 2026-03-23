@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDelegation } from '../../context/DelegationContext';
 import { API_BASE_URL } from '../../config';
+import { createPublicClient, http, formatUnits, type Address } from 'viem';
+import { baseSepolia } from 'viem/chains';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -10,23 +12,94 @@ interface Message {
   swapData?: Record<string, any>;
 }
 
+export interface Asset {
+  symbol: string;
+  name: string;
+  balance: string;
+  valueUsd: string;
+  icon: string;
+  color?: string;
+  address?: Address;
+}
+
+const USDC_ADDRESS = "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as Address;
+const WETH_ADDRESS = "0x4200000000000000000000000000000000000006" as Address;
+
+const publicClient = createPublicClient({
+  chain: baseSepolia,
+  transport: http(),
+});
+
 export const useVaultLogic = () => {
   const { smartAccountAddress, delegationPayload } = useDelegation();
   // --- Portfolio State ---
-  const [portfolioValue, setPortfolioValue] = useState(12450.00);
+  const [portfolioValue, setPortfolioValue] = useState(0);
   const [dailyChange] = useState(4.2);
+  const [assets, setAssets] = useState<Asset[]>([
+    { symbol: 'USDC', name: 'USD Coin', balance: '0.00', valueUsd: '0.00', icon: 'monetization_on', color: 'primary', address: USDC_ADDRESS },
+    { symbol: 'WETH', name: 'Wrapped Ether', balance: '0.00', valueUsd: '0.00', icon: 'currency_exchange', color: 'on-surface', address: WETH_ADDRESS },
+    { symbol: 'ETH', name: 'Ethereum', balance: '0.00', valueUsd: '0.00', icon: 'account_balance_wallet', color: 'secondary' },
+  ]);
 
   // --- Identity ---
   const userAddress = smartAccountAddress || '0x0000000000000000000000000000000000000000'; 
 
   const storageKey = `chat_messages_${userAddress}`;
 
+  const fetchBalances = useCallback(async () => {
+    if (!smartAccountAddress || smartAccountAddress === '0x0000000000000000000000000000000000000000') return;
+
+    try {
+      const abi = [{ name: 'balanceOf', type: 'function', inputs: [{ name: 'account', type: 'address' }], outputs: [{ name: 'balance', type: 'uint256' }] }];
+
+      // Fetch ETH Balance
+      const ethBalance = await publicClient.getBalance({ address: smartAccountAddress as Address });
+      const ethFormatted = formatUnits(ethBalance, 18);
+      
+      // Fetch USDC Balance (6 decimals)
+      const usdcBalance = await publicClient.readContract({
+        address: USDC_ADDRESS,
+        abi,
+        functionName: 'balanceOf',
+        args: [smartAccountAddress as Address],
+      }) as bigint;
+      const usdcFormatted = formatUnits(usdcBalance, 6);
+
+      // Fetch WETH Balance (18 decimals)
+      const wethBalance = await publicClient.readContract({
+        address: WETH_ADDRESS,
+        abi,
+        functionName: 'balanceOf',
+        args: [smartAccountAddress as Address],
+      }) as bigint;
+      const wethFormatted = formatUnits(wethBalance, 18);
+
+      // Simple mock prices
+      const ethPrice = 3500;
+      const usdcPrice = 1;
+      
+      const ethValueUsd = (parseFloat(ethFormatted) * ethPrice).toFixed(2);
+      const usdcValueUsd = (parseFloat(usdcFormatted) * usdcPrice).toFixed(2);
+      const wethValueUsd = (parseFloat(wethFormatted) * ethPrice).toFixed(2);
+
+      const totalValue = parseFloat(ethValueUsd) + parseFloat(usdcValueUsd) + parseFloat(wethValueUsd);
+      setPortfolioValue(totalValue);
+
+      setAssets([
+        { symbol: 'USDC', name: 'USD Coin', balance: `${parseFloat(usdcFormatted).toLocaleString()} USDC`, valueUsd: `$${usdcValueUsd}`, icon: 'monetization_on', color: 'primary', address: USDC_ADDRESS },
+        { symbol: 'WETH', name: 'Wrapped Ether', balance: `${parseFloat(wethFormatted).toFixed(4)} WETH`, valueUsd: `$${wethValueUsd}`, icon: 'currency_exchange', color: 'on-surface', address: WETH_ADDRESS },
+        { symbol: 'ETH', name: 'Ethereum', balance: `${parseFloat(ethFormatted).toFixed(4)} ETH`, valueUsd: `$${ethValueUsd}`, icon: 'account_balance_wallet', color: 'secondary' },
+      ]);
+    } catch (error) {
+      console.error("Error fetching balances:", error);
+    }
+  }, [smartAccountAddress]);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPortfolioValue(prev => prev + (Math.random() * 10 - 5));
-    }, 5000);
+    fetchBalances();
+    const interval = setInterval(fetchBalances, 15000); // Refresh every 15s
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchBalances]);
 
   // --- Chat State Persistence ---
   const [messages, setMessages] = useState<Message[]>(() => {
@@ -66,7 +139,9 @@ export const useVaultLogic = () => {
     setIsTyping(true);
 
     try {
-      const systemContext = `The user is currently logged in with address: ${userAddress}`;
+      const systemContext = `The user is currently logged in with address: ${userAddress}. 
+Current Portfolio Value: $${portfolioValue.toFixed(2)}.
+Available Assets: ${assets.map(a => `${a.balance} (${a.symbol})`).join(', ')}.`;
       
       const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
@@ -183,6 +258,9 @@ Expected Amount Out: ${data.quote?.amountOutFormatted || data.quote?.expectedAmo
           type: 'text'
         }]);
         setPendingSwap(null);
+        
+        // Refresh balances after successful swap
+        setTimeout(fetchBalances, 2000); 
       } else {
         throw new Error(data.error || 'Swap execution failed');
       }
@@ -200,6 +278,7 @@ Expected Amount Out: ${data.quote?.amountOutFormatted || data.quote?.expectedAmo
     userAddress,
     portfolioValue,
     dailyChange,
+    assets,
     messages,
     inputValue,
     setInputValue,

@@ -24,6 +24,7 @@ export default function VaultDashboard() {
           portfolioValue={logic.portfolioValue}
           dailyChange={logic.dailyChange}
           userAddress={logic.userAddress}
+          assets={logic.assets}
         />
         
         <ChatPanel 

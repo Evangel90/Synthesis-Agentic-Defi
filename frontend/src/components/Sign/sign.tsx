@@ -101,7 +101,7 @@ export function SignIn() {
   };
 
   return (
-    <body className="bg-surface font-body text-on-surface min-h-screen flex flex-col justify-center items-center selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <div className="bg-surface font-body text-on-surface min-h-screen flex flex-col justify-center items-center selection:bg-primary-fixed selection:text-on-primary-fixed">
       <main className="w-full max-w-md px-6 py-12 mx-auto">
         {/* Auth Card */}
         <div className="bg-surface-container-lowest rounded-xl soft-shadow p-10 flex flex-col items-center text-center space-y-8 border border-outline-variant/20">
@@ -269,6 +269,6 @@ export function SignIn() {
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-secondary/5 rounded-full blur-[100px]" />
       </div>
-    </body>
+    </div>
   );
 }
