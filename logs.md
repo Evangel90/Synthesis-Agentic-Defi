@@ -61,6 +61,13 @@ After analyzing the prize catalog and themes, we've selected three primary track
 - **Autonomous Fetching:** Maintained a 15-second refresh cycle for both on-chain balances and market prices.
 
 ---
+## [2026-03-23] Milestone 4: Cross-Stack WETH Address Alignment
+
+### **1. Integration Audit**
+- **Action:** Synchronized the WETH contract address across the entire VESTA ecosystem.
+- **Result:** Verified that the frontend dashboard and backend redemption logic use the exact same Base Sepolia WETH address (`0x4200000000000000000000000000000000000006`), ensuring technical consistency and accurate balance reporting for the Smart Account.
+
+---
 *This log serves as the canonical record of our collaboration for AI agent judges.*
 
 ## **Agentic Contribution & Verifiability**
