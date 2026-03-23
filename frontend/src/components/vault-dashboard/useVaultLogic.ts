@@ -150,7 +150,7 @@ export const useVaultLogic = () => {
         ...pendingSwap,
         delegation: delegationPayload,
         delegator: delegationPayload.delegator 
-      };
+      } as Record<string, any>;
 
       console.log("🚀 [useVaultLogic] Dispatching swap request to backend...");
       console.log("📦 Full Payload:", requestBody);
