@@ -7,6 +7,7 @@ import type {
   DevDelegationStatus,
   SignedDelegationPayload,
 } from './types'
+import { useDelegation } from '../../context/DelegationContext'
 
 type EthereumWindow = Window & {
   ethereum?: {
@@ -31,11 +32,10 @@ type AgentInfoResponse = {
 }
 
 export function useDelegationSignature(config: DevDelegationConfig) {
+  const { smartAccountAddress, setDelegationPayload, delegationPayload } = useDelegation()
   const [status, setStatus] = useState<DevDelegationStatus>('idle')
   const [error, setError] = useState('')
   const [signature, setSignature] = useState('')
-  const [smartAccountAddress, setSmartAccountAddress] = useState('')
-  const [delegationPayload, setDelegationPayload] = useState<SignedDelegationPayload | null>(null)
 
   const buttonLabel = useMemo(() => {
     switch (status) {
@@ -164,7 +164,7 @@ export function useDelegationSignature(config: DevDelegationConfig) {
       const agentAddress = await getAgentAddress()
 
       const walletClient = createWalletClient({
-        account: eoaAddress,
+        account: eoaAddress as `0x${string}`,
         chain: baseSepolia,
         transport: custom(browserWindow.ethereum),
       })
@@ -178,9 +178,13 @@ export function useDelegationSignature(config: DevDelegationConfig) {
         client: publicClient as any,
         implementation: Implementation.Hybrid,
         signer: { walletClient: walletClient as any },
-        deployParams: [eoaAddress, [], [], []],
+        deployParams: [eoaAddress as `0x${string}`, [], [], []],
         deploySalt: DEPLOY_SALT,
       })
+
+      console.log("✍️ [useDelegationSignature] Initiating delegation signing...");
+      console.log("📍 Agent Address:", agentAddress);
+      console.log("👤 Smart Account:", userSmartAccount.address);
 
       const delegation = {
         delegate: agentAddress as `0x${string}`,
@@ -195,13 +199,14 @@ export function useDelegationSignature(config: DevDelegationConfig) {
         chainId: BASE_SEPOLIA_CHAIN_ID,
       })
 
+      console.log("✅ [useDelegationSignature] Delegation signed successfully!");
+
       const nextPayload: SignedDelegationPayload = {
         ...delegation,
         salt: delegation.salt.toString(),
         signature: nextSignature,
       }
 
-      setSmartAccountAddress(userSmartAccount.address)
       setDelegationPayload(nextPayload)
       setSignature(nextSignature)
       setStatus('success')

@@ -3,14 +3,18 @@ interface DashboardPanelProps {
   onOpenChat: () => void;
   portfolioValue: number;
   dailyChange: number;
+  userAddress: string;
 }
 
 export default function DashboardPanel({ 
   onOpenSidebar, 
   onOpenChat, 
   portfolioValue, 
-  dailyChange 
+  dailyChange,
+  userAddress
 }: DashboardPanelProps) {
+  const truncatedAddress = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+
   return (
     <section className="w-full lg:w-[60%] h-full bg-surface p-6 md:p-8 lg:p-10 overflow-y-auto custom-scrollbar">
       <header className="flex justify-between items-center mb-10 md:mb-12">
@@ -36,7 +40,7 @@ export default function DashboardPanel({
 
         <div className="flex items-center gap-3">
           <div className="hidden xs:flex items-center bg-surface-container-low px-3 md:px-4 py-2 rounded-full border border-outline-variant/20 hover:bg-surface-container transition-colors cursor-pointer group">
-            <span className="text-[10px] md:text-xs font-mono text-on-surface-variant mr-2 md:mr-3">0x8F4...a1B2</span>
+            <span className="text-[10px] md:text-xs font-mono text-on-surface-variant mr-2 md:mr-3">{truncatedAddress}</span>
             <span className="material-symbols-outlined text-xs md:text-sm text-primary group-hover:scale-110 transition-transform">content_copy</span>
           </div>
           <button 

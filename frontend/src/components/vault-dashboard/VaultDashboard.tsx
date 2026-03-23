@@ -23,6 +23,7 @@ export default function VaultDashboard() {
           onOpenChat={() => setIsChatOpen(true)}
           portfolioValue={logic.portfolioValue}
           dailyChange={logic.dailyChange}
+          userAddress={logic.userAddress}
         />
         
         <ChatPanel 
