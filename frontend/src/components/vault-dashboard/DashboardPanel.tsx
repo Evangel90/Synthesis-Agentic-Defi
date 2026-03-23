@@ -1,4 +1,5 @@
-import { Asset } from './useVaultLogic';
+import type { Asset } from './useVaultLogic';
+import { useState } from 'react';
 
 interface DashboardPanelProps {
   onOpenSidebar: () => void;
@@ -17,7 +18,14 @@ export default function DashboardPanel({
   userAddress,
   assets
 }: DashboardPanelProps) {
+  const [copied, setCopied] = useState(false);
   const truncatedAddress = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(userAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <section className="w-full lg:w-[60%] h-full bg-surface p-6 md:p-8 lg:p-10 overflow-y-auto custom-scrollbar">
@@ -43,9 +51,19 @@ export default function DashboardPanel({
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden xs:flex items-center bg-surface-container-low px-3 md:px-4 py-2 rounded-full border border-outline-variant/20 hover:bg-surface-container transition-colors cursor-pointer group">
+          <div 
+            onClick={handleCopy}
+            className="hidden xs:flex items-center bg-surface-container-low px-3 md:px-4 py-2 rounded-full border border-outline-variant/20 hover:bg-surface-container transition-colors cursor-pointer group relative"
+          >
             <span className="text-[10px] md:text-xs font-mono text-on-surface-variant mr-2 md:mr-3">{truncatedAddress}</span>
-            <span className="material-symbols-outlined text-xs md:text-sm text-primary group-hover:scale-110 transition-transform">content_copy</span>
+            <span className="material-symbols-outlined text-xs md:text-sm text-primary group-hover:scale-110 transition-transform">
+              {copied ? 'check' : 'content_copy'}
+            </span>
+            {copied && (
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                Copied!
+              </span>
+            )}
           </div>
           <button 
             className="lg:hidden w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors"

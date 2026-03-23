@@ -23,6 +23,7 @@ export interface Asset {
 }
 
 const USDC_ADDRESS = "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as Address;
+const WETH_ADDRESS = "0x4200000000000000000000000000000000000006" as Address;
 
 const publicClient = createPublicClient({
   chain: baseSepolia,
@@ -36,7 +37,8 @@ export const useVaultLogic = () => {
   const [dailyChange] = useState(4.2);
   const [assets, setAssets] = useState<Asset[]>([
     { symbol: 'USDC', name: 'USD Coin', balance: '0.00', valueUsd: '0.00', icon: 'monetization_on', color: 'primary', address: USDC_ADDRESS },
-    { symbol: 'ETH', name: 'Ethereum', balance: '0.00', valueUsd: '0.00', icon: 'currency_exchange', color: 'on-surface' },
+    { symbol: 'WETH', name: 'Wrapped Ether', balance: '0.00', valueUsd: '0.00', icon: 'currency_exchange', color: 'on-surface', address: WETH_ADDRESS },
+    { symbol: 'ETH', name: 'Ethereum', balance: '0.00', valueUsd: '0.00', icon: 'account_balance_wallet', color: 'secondary' },
   ]);
 
   // --- Identity ---
@@ -48,6 +50,8 @@ export const useVaultLogic = () => {
     if (!smartAccountAddress || smartAccountAddress === '0x0000000000000000000000000000000000000000') return;
 
     try {
+      const abi = [{ name: 'balanceOf', type: 'function', inputs: [{ name: 'account', type: 'address' }], outputs: [{ name: 'balance', type: 'uint256' }] }];
+
       // Fetch ETH Balance
       const ethBalance = await publicClient.getBalance({ address: smartAccountAddress as Address });
       const ethFormatted = formatUnits(ethBalance, 18);
@@ -55,23 +59,36 @@ export const useVaultLogic = () => {
       // Fetch USDC Balance (6 decimals)
       const usdcBalance = await publicClient.readContract({
         address: USDC_ADDRESS,
-        abi: [{ name: 'balanceOf', type: 'function', inputs: [{ name: 'account', type: 'address' }], outputs: [{ name: 'balance', type: 'uint256' }] }],
+        abi,
         functionName: 'balanceOf',
         args: [smartAccountAddress as Address],
       }) as bigint;
       const usdcFormatted = formatUnits(usdcBalance, 6);
 
-      // Simple mock price for ETH
-      const ethPrice = 3500;
-      const ethValueUsd = (parseFloat(ethFormatted) * ethPrice).toFixed(2);
-      const usdcValueUsd = parseFloat(usdcFormatted).toFixed(2);
+      // Fetch WETH Balance (18 decimals)
+      const wethBalance = await publicClient.readContract({
+        address: WETH_ADDRESS,
+        abi,
+        functionName: 'balanceOf',
+        args: [smartAccountAddress as Address],
+      }) as bigint;
+      const wethFormatted = formatUnits(wethBalance, 18);
 
-      const totalValue = parseFloat(ethValueUsd) + parseFloat(usdcValueUsd);
+      // Simple mock prices
+      const ethPrice = 3500;
+      const usdcPrice = 1;
+      
+      const ethValueUsd = (parseFloat(ethFormatted) * ethPrice).toFixed(2);
+      const usdcValueUsd = (parseFloat(usdcFormatted) * usdcPrice).toFixed(2);
+      const wethValueUsd = (parseFloat(wethFormatted) * ethPrice).toFixed(2);
+
+      const totalValue = parseFloat(ethValueUsd) + parseFloat(usdcValueUsd) + parseFloat(wethValueUsd);
       setPortfolioValue(totalValue);
 
       setAssets([
         { symbol: 'USDC', name: 'USD Coin', balance: `${parseFloat(usdcFormatted).toLocaleString()} USDC`, valueUsd: `$${usdcValueUsd}`, icon: 'monetization_on', color: 'primary', address: USDC_ADDRESS },
-        { symbol: 'ETH', name: 'Ethereum', balance: `${parseFloat(ethFormatted).toFixed(4)} ETH`, valueUsd: `$${ethValueUsd}`, icon: 'currency_exchange', color: 'on-surface' },
+        { symbol: 'WETH', name: 'Wrapped Ether', balance: `${parseFloat(wethFormatted).toFixed(4)} WETH`, valueUsd: `$${wethValueUsd}`, icon: 'currency_exchange', color: 'on-surface', address: WETH_ADDRESS },
+        { symbol: 'ETH', name: 'Ethereum', balance: `${parseFloat(ethFormatted).toFixed(4)} ETH`, valueUsd: `$${ethValueUsd}`, icon: 'account_balance_wallet', color: 'secondary' },
       ]);
     } catch (error) {
       console.error("Error fetching balances:", error);
