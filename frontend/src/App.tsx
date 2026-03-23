@@ -16,7 +16,7 @@ import AgentPermissions from './components/agent-permissions';
 
 export default function App() {
   const { isConnected } = useAccount();
-
+  
   return (
     <Router>
       <Routes>
