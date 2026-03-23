@@ -9,6 +9,8 @@ import type {
 } from './types'
 import { useDelegation } from '../../context/DelegationContext'
 
+import { API_BASE_URL } from '../../config'
+
 type EthereumWindow = Window & {
   ethereum?: {
     request?: (args: { method: string; params?: unknown[] }) => Promise<unknown>
@@ -95,7 +97,7 @@ export function useDelegationSignature(config: DevDelegationConfig) {
   }
 
   async function getAgentAddress() {
-    const response = await fetch('http://localhost:3000/api/agent')
+    const response = await fetch(`${API_BASE_URL}/api/agent`)
 
     if (!response.ok) {
       throw new Error(`Agent endpoint failed with status ${response.status}`)

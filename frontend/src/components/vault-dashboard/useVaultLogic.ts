@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDelegation } from '../../context/DelegationContext';
+import { API_BASE_URL } from '../../config';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -67,7 +68,7 @@ export const useVaultLogic = () => {
     try {
       const systemContext = `The user is currently logged in with address: ${userAddress}`;
       
-      const response = await fetch('http://localhost:3000/api/chat', {
+      const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -154,7 +155,7 @@ export const useVaultLogic = () => {
       console.log("🚀 [useVaultLogic] Dispatching swap request to backend...");
       console.log("📦 Full Payload:", requestBody);
 
-      const response = await fetch('http://localhost:3000/api/redeem', {
+      const response = await fetch(`${API_BASE_URL}/api/redeem`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody),
