@@ -4,6 +4,8 @@ import cors from "cors";
 import { setupSwagger } from "./config/swagger";
 import { getQuote } from "./controllers/QuoteController";
 import { redeemSwap } from "./controllers/RedeemController";
+import { getAgentInfo } from "./controllers/AgentController";
+import { handleChat } from "./controllers/ChatController";
 
 dotenv.config();
 
@@ -62,6 +64,7 @@ setupSwagger(app, port);
  *         description: Success
  */
 app.get("/api/quote", getQuote);
+app.get("/api/agent", getAgentInfo);
 
 /**
  * @openapi
@@ -98,6 +101,36 @@ app.get("/api/quote", getQuote);
  *         description: Success
  */
 app.post("/api/redeem", redeemSwap);
+
+/**
+ * @openapi
+ * /api/chat:
+ *   post:
+ *     summary: Chat with the AI DeFi Assistant
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [message]
+ *             properties:
+ *               message:
+ *                 type: string
+ *               history:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     role:
+ *                       type: string
+ *                     content:
+ *                       type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+app.post("/api/chat", handleChat);
 
 app.get("/", (req, res) => {
   res.send("Agentic DeFi Flow is alive.");

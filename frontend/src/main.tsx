@@ -5,6 +5,7 @@ import { WagmiProvider } from 'wagmi'
 import './index.css'
 import App from './App.tsx'
 import { wagmiConfig } from './wagmi'
+import { DelegationProvider } from './context/DelegationContext.tsx'
 
 const queryClient = new QueryClient()
 
@@ -12,7 +13,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <DelegationProvider>
+          <App />
+        </DelegationProvider>
       </QueryClientProvider>
     </WagmiProvider>
   </StrictMode>,

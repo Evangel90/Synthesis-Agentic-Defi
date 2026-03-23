@@ -7,13 +7,12 @@ const QUOTER_V2_ABI = parseAbi([
 
 const CONTRACTS = {
   base: {
-    quoterV2: "0x3d146FcE6c1006857750cBe8aF44f76a28041CCc" as Address,
+    quoterV2: "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a" as Address,
   },
   celo: {
     quoterV2: "0x82825d0554fA07f7FC52Ab63c961F330fdEFa8E8" as Address,
   },
   baseSepolia: {
-    // quoterV2: "0x3d146FcE6c1006857750cBe8aF44f76a28041CCc" as Address,
     quoterV2: "0xC5290058841028F1614F3A6F0F5816cAd0df5E27" as Address,
   },
   celoSepolia: {
