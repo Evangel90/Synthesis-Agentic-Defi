@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useDisconnect } from 'wagmi';
+import { useAuthSession } from '../../auth-session';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -7,7 +7,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { disconnect } = useDisconnect();
+  const { signOut } = useAuthSession();
 
   return (
     <>
@@ -64,7 +64,10 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             <span className="text-sm font-medium">Support</span>
           </a>
           <button 
-            onClick={() => disconnect()}
+            onClick={() => {
+              void signOut();
+              onClose();
+            }}
             className="w-full flex items-center text-on-surface/70 py-3 px-2 hover:text-error transition-colors rounded-lg"
           >
             <span className="material-symbols-outlined mr-3 text-lg">logout</span>

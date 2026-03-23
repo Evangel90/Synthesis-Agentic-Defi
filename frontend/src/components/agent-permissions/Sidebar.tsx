@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useDisconnect } from 'wagmi'
+import { useAuthSession } from '../../auth-session'
 import Icon from './Icon'
 import Button from './Button'
 import { NAV_ITEMS, BOTTOM_NAV_ITEMS } from './constants'
@@ -11,7 +11,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { disconnect } = useDisconnect();
+  const { signOut } = useAuthSession()
 
   return (
     <>
@@ -80,7 +80,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               key={item.label}
               onClick={() => {
                 if (item.label === 'Sign Out') {
-                  disconnect();
+                  void signOut();
                 }
                 onClose();
               }}
