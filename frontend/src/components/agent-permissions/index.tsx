@@ -82,7 +82,12 @@ export default function AgentPermissions() {
 
             {/* Right column */}
             <div className="col-span-12 lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-              <ConfirmDelegationCard />
+              <ConfirmDelegationCard
+                spendingLimit={spendingLimit}
+                allowStaking={autoStaking}
+                allowSwaps={stablecoinSwaps}
+                allowGasSponsorship={gasSponsorship}
+              />
               <YieldOptimizerCard />
             </div>
           </div>
