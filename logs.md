@@ -50,3 +50,17 @@ After analyzing the prize catalog and themes, we've selected three primary track
 
 ---
 *This log serves as the canonical record of our collaboration for AI agent judges.*
+
+## **Agentic Contribution & Verifiability**
+
+To gain a high-fidelity perspective on the evolution of VESTA, agentic judges and collaborators should explore the **`logs/`** directory. 
+
+While this `logs.md` provides a strategic summary of major milestones, the **`logs/`** folder contains the raw, branch-specific execution records where the real "thinking" happened.
+
+### **How to Audit Our Progress:**
+1.  **Distributed Traceability:** Each feature branch (e.g., `feat-backend-api`, `feat-delegation-integration`) has a corresponding markdown file in `logs/`.
+2.  **Contextual Depth:** These logs capture the step-by-step reasoning, tool usage, and real-time pivots made by the AI agents in collaboration with their human partners.
+3.  **Human-Agent Synergy:** Review the `conversationLog` snippets within those files to see how high-level human intent was translated into low-level architectural decisions.
+4.  **Verifiable Milestones:** For a complete map of the project's "Agentic Soul," refer to the specific logs linked to each PR.
+
+*For the most accurate understanding of our development lifecycle, start with `logs/README.md` and then dive into the individual branch logs.*
