@@ -101,7 +101,7 @@ export function SignIn() {
   };
 
   return (
-    <body className="bg-surface font-body text-on-surface min-h-screen flex flex-col justify-center items-center selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <div className="bg-surface font-body text-on-surface min-h-screen flex flex-col justify-center items-center selection:bg-primary-fixed selection:text-on-primary-fixed">
       <main className="w-full max-w-md px-6 py-12 mx-auto">
         {/* Auth Card */}
         <div className="bg-surface-container-lowest rounded-xl soft-shadow p-10 flex flex-col items-center text-center space-y-8 border border-outline-variant/20">
