@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useDelegation } from '../../context/DelegationContext';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -9,12 +10,13 @@ interface Message {
 }
 
 export const useVaultLogic = () => {
+  const { smartAccountAddress, delegationPayload } = useDelegation();
   // --- Portfolio State ---
   const [portfolioValue, setPortfolioValue] = useState(12450.00);
   const [dailyChange] = useState(4.2);
 
   // --- Identity ---
-  const [userAddress] = useState('0x8F45a1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8'); 
+  const userAddress = smartAccountAddress || '0x0000000000000000000000000000000000000000'; 
 
   const storageKey = `chat_messages_${userAddress}`;
 
@@ -90,15 +92,18 @@ export const useVaultLogic = () => {
 
         if (jsonMatch) {
           try {
-            const swapData = JSON.parse(jsonMatch[1]);
-            swapData.delegator = userAddress;
-            if (!swapData.delegation || Object.keys(swapData.delegation).length === 0) {
-                swapData.delegation = { salt: '0', caveats: [] };
-            }
+            const parsedData = JSON.parse(jsonMatch[1]);
             
-            setPendingSwap(swapData);
+            // Ensure swapData is a complete JSON for the payload
+            const completeSwapData = {
+              ...parsedData,
+              delegator: userAddress,
+              delegation: delegationPayload || { salt: '0', caveats: [] }
+            };
+            
+            setPendingSwap(completeSwapData);
             assistantMsg.type = 'swap_init';
-            assistantMsg.swapData = swapData;
+            assistantMsg.swapData = completeSwapData;
           } catch (e) {
             console.error("Failed to parse swap JSON", e);
           }
@@ -123,6 +128,15 @@ export const useVaultLogic = () => {
   const executeSwap = async () => {
     if (!pendingSwap) return;
 
+    if (!delegationPayload) {
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: '❌ Error: No delegation found. Please grant permissions in the Agent Permissions page first.',
+        type: 'text'
+      }]);
+      return;
+    }
+
     setMessages(prev => [...prev, { 
       role: 'assistant', 
       content: 'Executing swap transaction...', 
@@ -130,15 +144,32 @@ export const useVaultLogic = () => {
     }]);
 
     try {
+      // Use delegationPayload.delegator as the source of truth for the SA address
+      const requestBody = {
+        ...pendingSwap,
+        delegation: delegationPayload,
+        delegator: delegationPayload.delegator 
+      };
+
+      console.log("🚀 [useVaultLogic] Dispatching swap request to backend...");
+      console.log("📦 Full Payload:", requestBody);
+
       const response = await fetch('http://localhost:3000/api/redeem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pendingSwap),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
 
       if (data.success) {
+        console.log("✅ [useVaultLogic] Backend execution successful:", data.transactionHash);
+        
+        const explorerBase = requestBody.chain.includes('base') 
+            ? 'https://sepolia.basescan.org/tx/' 
+            : 'https://celoscan.io/tx/';
+        const explorerUrl = `${explorerBase}${data.transactionHash}`;
+
         setMessages(prev => [...prev, { 
           role: 'assistant', 
           content: `✅ Swap successful! 
@@ -147,7 +178,7 @@ Transaction Hash: ${data.transactionHash}
 
 Expected Amount Out: ${data.quote?.amountOutFormatted || data.quote?.expectedAmountOut} tokens.
 
-You can track this on the explorer.`,
+[Verify on Explorer](${explorerUrl})`,
           type: 'text'
         }]);
         setPendingSwap(null);
