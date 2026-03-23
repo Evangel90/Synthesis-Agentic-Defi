@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useDisconnect } from 'wagmi';
 
 interface SidebarProps {
@@ -8,6 +8,9 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { disconnect } = useDisconnect();
+  const location = useLocation();
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <>
@@ -27,8 +30,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       `}>
         <div className="px-8 mb-8 md:mb-10 flex justify-between items-center">
           <div>
-            <h1 className="font-headline font-bold text-on-surface text-xl">Vault.AI</h1>
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60 font-bold mt-1">Institutional Grade</p>
+            <h1 className="font-headline font-bold text-on-surface text-xl">VESTA</h1>
           </div>
           <button className="md:hidden text-on-surface-variant hover:text-on-surface p-1" onClick={onClose}>
             <span className="material-symbols-outlined">close</span>
@@ -36,11 +38,27 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         <nav className="flex-1 space-y-1">
-          <Link to="/" className="flex items-center bg-surface-container-lowest text-primary rounded-l-xl ml-4 shadow-sm px-6 py-3 transition-all duration-200" onClick={onClose}>
+          <Link 
+            to="/" 
+            className={`flex items-center rounded-l-xl ml-4 px-6 py-3 transition-all duration-200 ${
+              isActive('/') 
+                ? 'bg-surface-container-lowest text-primary shadow-sm' 
+                : 'text-on-surface/70 hover:bg-surface-container-lowest/50'
+            }`} 
+            onClick={onClose}
+          >
             <span className="material-symbols-outlined mr-3">grid_view</span>
             <span className="font-medium text-sm">Overview</span>
           </Link>
-          <Link to="/agent-permissions" className="flex items-center text-on-surface/70 px-6 py-3 hover:bg-surface-container-lowest/50 rounded-l-xl ml-4 transition-all duration-200" onClick={onClose}>
+          <Link 
+            to="/agent-permissions" 
+            className={`flex items-center rounded-l-xl ml-4 px-6 py-3 transition-all duration-200 ${
+              isActive('/agent-permissions') 
+                ? 'bg-surface-container-lowest text-primary shadow-sm' 
+                : 'text-on-surface/70 hover:bg-surface-container-lowest/50'
+            }`} 
+            onClick={onClose}
+          >
             <span className="material-symbols-outlined mr-3">smart_toy</span>
             <span className="font-medium text-sm">Agent Permissions</span>
           </Link>

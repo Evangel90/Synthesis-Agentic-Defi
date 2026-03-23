@@ -1,9 +1,13 @@
+import type { Asset } from './useVaultLogic';
+import { useState } from 'react';
+
 interface DashboardPanelProps {
   onOpenSidebar: () => void;
   onOpenChat: () => void;
   portfolioValue: number;
   dailyChange: number;
   userAddress: string;
+  assets: Asset[];
 }
 
 export default function DashboardPanel({ 
@@ -11,9 +15,17 @@ export default function DashboardPanel({
   onOpenChat, 
   portfolioValue, 
   dailyChange,
-  userAddress
+  userAddress,
+  assets
 }: DashboardPanelProps) {
+  const [copied, setCopied] = useState(false);
   const truncatedAddress = userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(userAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <section className="w-full lg:w-[60%] h-full bg-surface p-6 md:p-8 lg:p-10 overflow-y-auto custom-scrollbar">
@@ -39,9 +51,19 @@ export default function DashboardPanel({
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden xs:flex items-center bg-surface-container-low px-3 md:px-4 py-2 rounded-full border border-outline-variant/20 hover:bg-surface-container transition-colors cursor-pointer group">
+          <div 
+            onClick={handleCopy}
+            className="hidden xs:flex items-center bg-surface-container-low px-3 md:px-4 py-2 rounded-full border border-outline-variant/20 hover:bg-surface-container transition-colors cursor-pointer group relative"
+          >
             <span className="text-[10px] md:text-xs font-mono text-on-surface-variant mr-2 md:mr-3">{truncatedAddress}</span>
-            <span className="material-symbols-outlined text-xs md:text-sm text-primary group-hover:scale-110 transition-transform">content_copy</span>
+            <span className="material-symbols-outlined text-xs md:text-sm text-primary group-hover:scale-110 transition-transform">
+              {copied ? 'check' : 'content_copy'}
+            </span>
+            {copied && (
+              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                Copied!
+              </span>
+            )}
           </div>
           <button 
             className="lg:hidden w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md hover:bg-primary/90 transition-colors"
@@ -86,51 +108,23 @@ export default function DashboardPanel({
 
       <div className="space-y-3 md:space-y-4">
         <h3 className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-on-surface-variant/60 mb-4 md:mb-6">Your Assets</h3>
-        <div className="bg-surface-container-lowest p-4 md:p-5 rounded-xl flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/10">
-          <div className="flex items-center space-x-3 md:space-x-4">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-primary text-sm md:text-base">monetization_on</span>
+        {assets.map((asset) => (
+          <div key={asset.symbol} className="bg-surface-container-lowest p-4 md:p-5 rounded-xl flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/10">
+            <div className="flex items-center space-x-3 md:space-x-4">
+              <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0`}>
+                <span className={`material-symbols-outlined text-${asset.color || 'primary'} text-sm md:text-base`}>{asset.icon}</span>
+              </div>
+              <div>
+                <p className="font-bold text-on-surface text-sm md:text-base">{asset.symbol}</p>
+                <p className="text-[10px] md:text-xs text-on-surface-variant">{asset.name}</p>
+              </div>
             </div>
-            <div>
-              <p className="font-bold text-on-surface text-sm md:text-base">USDC</p>
-              <p className="text-[10px] md:text-xs text-on-surface-variant">USD Coin</p>
-            </div>
-          </div>
-          <div className="text-right">
-            <p className="font-bold text-on-surface text-sm md:text-base">8,420.00 USDC</p>
-            <p className="text-[10px] md:text-xs text-on-surface-variant">$8,420.00</p>
-          </div>
-        </div>
-        <div className="bg-surface-container-lowest p-4 md:p-5 rounded-xl flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/10">
-          <div className="flex items-center space-x-3 md:space-x-4">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-on-surface text-sm md:text-base">currency_exchange</span>
-            </div>
-            <div>
-              <p className="font-bold text-on-surface text-sm md:text-base">ETH</p>
-              <p className="text-[10px] md:text-xs text-on-surface-variant">Ethereum</p>
+            <div className="text-right">
+              <p className="font-bold text-on-surface text-sm md:text-base">{asset.balance}</p>
+              <p className="text-[10px] md:text-xs text-on-surface-variant">{asset.valueUsd}</p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="font-bold text-on-surface text-sm md:text-base">1.45 ETH</p>
-            <p className="text-[10px] md:text-xs text-on-surface-variant">$3,230.15</p>
-          </div>
-        </div>
-        <div className="bg-surface-container-lowest p-4 md:p-5 rounded-xl flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer border border-outline-variant/10">
-          <div className="flex items-center space-x-3 md:space-x-4">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-[#8247e5] text-sm md:text-base">layers</span>
-            </div>
-            <div>
-              <p className="font-bold text-on-surface text-sm md:text-base">SOL</p>
-              <p className="text-[10px] md:text-xs text-on-surface-variant">Solana</p>
-            </div>
-          </div>
-          <div className="text-right">
-            <p className="font-bold text-on-surface text-sm md:text-base">5.20 SOL</p>
-            <p className="text-[10px] md:text-xs text-on-surface-variant">$799.85</p>
-          </div>
-        </div>
+        ))}
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 import Icon from './Icon'
 import Toggle from './Toggle'
 import type { ToggleItem } from './types'
+import Card from './Card'
 
 interface PolicyGuardrailsCardProps {
   items: ToggleItem[]
@@ -8,21 +9,21 @@ interface PolicyGuardrailsCardProps {
 
 export default function PolicyGuardrailsCard({ items }: PolicyGuardrailsCardProps) {
   return (
-    <section className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <Card padding={false} className="overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-5 border-b border-slate-200">
-        <h3 className="font-headline text-base font-bold text-slate-900">Policy Guardrails</h3>
-        <p className="text-xs text-slate-500 mt-0.5">
+      <div className="px-6 py-5 md:px-8 md:py-6 border-b border-outline-variant/10">
+        <h3 className="font-headline text-base font-bold text-on-surface">Policy Guardrails</h3>
+        <p className="text-xs text-on-surface-variant/70 mt-0.5">
           Define what actions your AI agent can take
         </p>
       </div>
 
       {/* Toggle rows */}
-      <div className="divide-y divide-slate-200">
+      <div className="divide-y divide-outline-variant/10">
         {items.map((item) => (
           <div
             key={item.label}
-            className="px-6 py-5 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+            className="px-6 py-5 md:px-8 md:py-6 flex items-center justify-between gap-4 hover:bg-surface-container/30 transition-colors"
           >
             <div className="flex gap-4 items-center min-w-0">
               {/* Icon box */}
@@ -35,8 +36,8 @@ export default function PolicyGuardrailsCard({ items }: PolicyGuardrailsCardProp
 
               {/* Text */}
               <div className="min-w-0">
-                <p className="font-semibold text-slate-900 text-sm">{item.label}</p>
-                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{item.desc}</p>
+                <p className="font-bold text-on-surface text-sm">{item.label}</p>
+                <p className="text-xs text-on-surface-variant/70 mt-0.5 leading-relaxed">{item.desc}</p>
               </div>
             </div>
 
@@ -44,6 +45,6 @@ export default function PolicyGuardrailsCard({ items }: PolicyGuardrailsCardProp
           </div>
         ))}
       </div>
-    </section>
+    </Card>
   )
 }

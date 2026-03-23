@@ -20,26 +20,26 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* PUBLIC ROUTE: Sign In */}
+        {/* If connected, show Dashboard. Otherwise show SignIn. No redirect. */}
+        <Route 
+          path="/" 
+          element={isConnected ? <VaultDashboard /> : <SignIn />} 
+        />
+        
+        {/* Compatible route if needed */}
         <Route 
           path="/sign-in" 
           element={!isConnected ? <SignIn /> : <Navigate to="/" replace />} 
         />
 
-        {/* PROTECTED ROUTES: Only show if connected */}
-        <Route 
-          path="/" 
-          element={isConnected ? <VaultDashboard /> : <Navigate to="/sign-in" replace />} 
-        />
-        
         {/* --- TEAM ROUTES START --- */}
         <Route 
           path="/agent-permissions" 
-          element={isConnected ? <AgentPermissions /> : <Navigate to="/sign-in" replace />} 
+          element={isConnected ? <AgentPermissions /> : <SignIn />} 
         />
         {/* --- TEAM ROUTES END --- */}
 
-        {/* Catch-all redirect */}
+        {/* Catch-all redirect to / */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
