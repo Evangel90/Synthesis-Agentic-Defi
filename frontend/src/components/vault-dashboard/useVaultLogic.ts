@@ -208,7 +208,7 @@ Available Assets: ${assets.map(a => `${a.balance} (${a.symbol})`).join(', ')}.`;
         ...pendingSwap,
         delegation: delegationPayload,
         delegator: delegationPayload.delegator 
-      };
+      } as Record<string, any>;
 
       console.log("🚀 [useVaultLogic] Dispatching swap request to backend...");
       console.log("📦 Full Payload:", requestBody);
