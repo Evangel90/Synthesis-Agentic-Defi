@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useDelegation } from '../../context/DelegationContext';
 import { API_BASE_URL } from '../../config';
-import { createPublicClient, http, formatUnits, type Address } from 'viem';
+import { createPublicClient, http } from 'viem';
 import { baseSepolia } from 'viem/chains';
+
+export type Address = `0x${string}`;
 
 interface Message {
   role: 'user' | 'assistant';
@@ -54,7 +56,7 @@ export const useVaultLogic = () => {
 
       // Fetch ETH Balance
       const ethBalance = await publicClient.getBalance({ address: smartAccountAddress as Address });
-      const ethFormatted = formatUnits(ethBalance, 18);
+      const ethFormatted = (Number(ethBalance) / 1e18).toString();
       
       // Fetch USDC Balance (6 decimals)
       const usdcBalance = await publicClient.readContract({
@@ -63,7 +65,7 @@ export const useVaultLogic = () => {
         functionName: 'balanceOf',
         args: [smartAccountAddress as Address],
       }) as bigint;
-      const usdcFormatted = formatUnits(usdcBalance, 6);
+      const usdcFormatted = (Number(usdcBalance) / 1e6).toString();
 
       // Fetch WETH Balance (18 decimals)
       const wethBalance = await publicClient.readContract({
@@ -72,7 +74,7 @@ export const useVaultLogic = () => {
         functionName: 'balanceOf',
         args: [smartAccountAddress as Address],
       }) as bigint;
-      const wethFormatted = formatUnits(wethBalance, 18);
+      const wethFormatted = (Number(wethBalance) / 1e18).toString();
 
       // Simple mock prices
       const ethPrice = 3500;
