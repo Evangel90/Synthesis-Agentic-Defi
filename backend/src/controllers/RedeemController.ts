@@ -3,6 +3,8 @@ import { UniswapService } from "../services/UniswapService";
 import { SwapService, UNIVERSAL_ROUTER_ADDRESSES } from "../services/SwapService";
 import { AgentService } from "../services/AgentService";
 import { type Address, parseUnits, encodeFunctionData, parseAbi } from "viem";
+import { ZeroGService, type ExecutionLog } from "../services/zeroGService";
+const zeroGService = new ZeroGService();
 
 const uniswapService = new UniswapService();
 const swapService = new SwapService();
@@ -163,20 +165,18 @@ export const redeemSwap = async (req: Request, res: Response) => {
         args: [
           tokenIn as Address,
           routerAddress,
-          (2n ** 160n) - 1n, // Max uint160 allowance for guaranteed routing
-          281474976710655    // Max uint48 expiration (prevents testnet node drift reverts)
+          (2n ** 160n) - 1n,
+          281474976710655   
         ]
       })
     });
 
-    // Execute the Swap on the Universal Router
     executions.push({
       target: routerAddress,
       value: 0n,
       callData: executionCallData,
     });
 
-    // 4. Properly format the delegation (convert string salt back to BigInt)
     const formattedDelegation = {
       ...delegation,
       salt: BigInt(delegation.salt),
@@ -187,9 +187,7 @@ export const redeemSwap = async (req: Request, res: Response) => {
       })),
     };
 
-    // --- ISOLATION DEBUGGING ---
-    // Change to executions.slice(0, 1) to test ONLY WETH Wrap
-    // Change to executions.slice(0, 3) to test Wrap + Approvals
+
     const debugExecutions = executions; // Restore full test run!
 
     // 5. Redeem the delegation and broadcast the transaction
@@ -202,16 +200,38 @@ export const redeemSwap = async (req: Request, res: Response) => {
 
     console.log(`✅ [RedeemController] Swap execution successful: ${result.transactionHash}`);
 
+const executionLog: ExecutionLog = {
+  timestamp: new Date().toISOString(),
+  userIntent: `Swap ${amountIn} ${rawTokenIn} to ${rawTokenOut} on ${chain}`,
+  chain: chain as string,
+  tokenIn: rawTokenIn as string,
+  tokenOut: rawTokenOut as string,
+  amountIn: amountIn as string,
+  expectedAmountOut: quote.amountOut.toString(),
+  transactionHash: result.transactionHash,
+  delegator: delegator as string,
+  agentReasoning: `Best route found via Uniswap V3. Slippage tolerance: 100% (testnet). Fee tier: ${fee || 3000}.`,
+};
+
+const storageRootHash = await zeroGService.uploadExecutionLog(executionLog);
+
     res.json({
       success: true,
       transactionHash: result.transactionHash,
       quote: {
         expectedAmountOut: quote.amountOut.toString(),
         amountOutMinimum: amountOutMinimum.toString(),
+      },
+      executionLog: {
+        rootHash: storageRootHash,
+        explorerLink: storageRootHash
+          ? `https://storagescan-testnet.0g.ai/tx/${storageRootHash}`
+          : null,
       }
     });
+
   } catch (error: any) {
-    console.error("Redeem swap failed:", error);
+    console.error(" [RedeemController] Swap failed:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 };

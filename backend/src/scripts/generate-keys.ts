@@ -1,5 +1,5 @@
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import { createPublicClient, http } from "viem";
+import { createPublicClient, http, isHex } from "viem";
 import { baseSepolia } from "viem/chains";
 import { toMetaMaskSmartAccount, Implementation } from "@metamask/smart-accounts-kit";
 import dotenv from "dotenv";
@@ -7,10 +7,28 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function generateKeys() {
-  // const userPK = generatePrivateKey();
-  // const agentPK = generatePrivateKey();
-  const userPK = process.env.USER_PRIVATE_KEY as `0x${string}`;
-  const agentPK = process.env.AGENT_PRIVATE_KEY as `0x${string}`;
+  // 1. Check if keys exist and are valid hex strings
+  const rawUserPK = process.env.USER_PRIVATE_KEY;
+  const rawAgentPK = process.env.AGENT_PRIVATE_KEY;
+
+  const keysMissing = !rawUserPK || !rawAgentPK || !isHex(rawUserPK) || !isHex(rawAgentPK);
+
+  if (keysMissing) {
+    console.log("⚠️  KEYS MISSING: Generating new keys for your .env file...\n");
+    const newUserPK = generatePrivateKey();
+    const newAgentPK = generatePrivateKey();
+
+    console.log("--- COPY AND PASTE THESE INTO YOUR .env FILE ---");
+    console.log(`USER_PRIVATE_KEY=${newUserPK}`);
+    console.log(`AGENT_PRIVATE_KEY=${newAgentPK}`);
+    console.log("------------------------------------------------\n");
+    console.log("After pasting, run this script again to see your Smart Account addresses.");
+    return; // Stop execution here so it doesn't crash on 'slice'
+  }
+
+  // 2. If we got here, keys exist. Proceed with Smart Account logic.
+  const userPK = rawUserPK as `0x${string}`;
+  const agentPK = rawAgentPK as `0x${string}`;
 
   const userEOA = privateKeyToAccount(userPK);
   const agentEOA = privateKeyToAccount(agentPK);
@@ -20,7 +38,6 @@ async function generateKeys() {
     transport: http(),
   });
 
-  // Calculate Smart Account Addresses (Counterfactual)
   const userSA = await toMetaMaskSmartAccount({
     client: publicClient as any,
     implementation: Implementation.Hybrid,
@@ -37,25 +54,11 @@ async function generateKeys() {
     deploySalt: "0x0000000000000000000000000000000000000000000000000000000000000000",
   });
 
-  console.log("\n====================================================");
-  console.log("   SYNTHESIS HACKATHON: SMART ACCOUNT GENERATOR");
-  console.log("====================================================\n");
-
-  console.log("1. HUMAN USER (The Delegator)");
-  console.log(`   EOA Address:   ${userEOA.address}`);
-  console.log(`   Smart Account: ${userSA.address}`);
-  console.log(`   Private Key:   ${userPK}`);
-  console.log("   Action:        Fund the SMART ACCOUNT with Base Sepolia ETH.\n");
-
-  console.log("2. AI AGENT (The Delegate)");
-  console.log(`   EOA Address:   ${agentEOA.address}`);
-  console.log(`   Smart Account: ${agentSA.address}`);
-  console.log(`   Private Key:   ${agentPK}`);
-  console.log("   Action:        Fund the SMART ACCOUNT with Base Sepolia ETH.\n");
-
-  console.log("====================================================");
-  console.log("   COPY THE PRIVATE KEYS INTO backend/.env");
-  console.log("====================================================\n");
+  console.log("✅ Smart Accounts Derived Successfully");
+  console.log(`User Smart Account:  ${userSA.address}`);
+  console.log(`Agent Smart Account: ${agentSA.address}`);
 }
 
-generateKeys();
+generateKeys().catch((err) => {
+    console.error("Critical Failure:", err.message);
+});
